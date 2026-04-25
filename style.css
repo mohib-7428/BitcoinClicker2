@@ -1,419 +1,98 @@
-/* 2026 Apr 25 */
-
 :root {
-    /* Color Palette */
-    --primary-gold: #f7931a;
-    --primary-glow: rgba(247, 147, 26, 0.4);
-    --bg-dark: #0d0e12;
-    --surface-light: rgba(255, 255, 255, 0.05);
-    --surface-medium: rgba(255, 255, 255, 0.1);
-    --text-main: #ffffff;
-    --text-muted: #a0a0a0;
-    --success-green: #00ff88;
-    --danger-red: #ff4d4d;
-    
-    /* Animation Speeds */
-    --anim-fast: 0.2s;
-    --anim-med: 0.5s;
-    --anim-slow: 3s;
-
-    /* Spacing & Borders */
-    --radius-lg: 20px;
-    --radius-md: 12px;
-    --border-glass: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* 1. CORE RESET & BASE */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    -webkit-tap-highlight-color: transparent;
-}
-
-@font-face {
-    font-family: 'VCR OSD Mono';
-    src: url("../fonts/VCR_OSD_MONO.ttf");
-    font-display: swap;
+    --bg: #0d0e12;
+    --panel: #16181d;
+    --accent: #f7931a;
+    --text: #ffffff;
+    --text-dim: #888;
 }
 
 body {
-    background-color: var(--bg-dark);
-    background-image: 
-        radial-gradient(circle at 50% 50%, #1a1c23 0%, #0d0e12 100%);
-    color: var(--text-main);
-    font-family: 'VCR OSD Mono', monospace;
-    min-height: 100vh;
-    overflow-x: hidden;
-    line-height: 1.6;
-    user-select: none;
-}
-
-/* 2. LAYOUT ENGINE (The Grid) */
-.game-wrapper {
-    display: grid;
-    grid-template-columns: 320px 1fr 380px;
-    height: 100vh;
-    gap: 10px;
-    padding: 10px;
-}
-
-/* 3. ANIMATION LIBRARY */
-@keyframes coin-pulse {
-    0% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 15px var(--primary-glow)); }
-    50% { transform: scale(1.05) rotate(2deg); filter: drop-shadow(0 0 30px var(--primary-gold)); }
-    100% { transform: scale(1) rotate(0deg); filter: drop-shadow(0 0 15px var(--primary-glow)); }
-}
-
-@keyframes float-particle {
-    0% { transform: translateY(0) translateX(0); opacity: 0; }
-    50% { opacity: 1; }
-    100% { transform: translateY(-100px) translateX(20px); opacity: 0; }
-}
-
-@keyframes slide-in-right {
-    from { transform: translateX(100px); opacity: 0; }
-    to { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes glow-text {
-    from { text-shadow: 0 0 5px #fff, 0 0 10px var(--primary-gold); }
-    to { text-shadow: 0 0 10px #fff, 0 0 20px var(--primary-gold); }
-}
-
-/* 4. MODULAR PANELS (Glassmorphism) */
-.panel {
-    background: var(--surface-light);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: var(--border-glass);
-    border-radius: var(--radius-lg);
-    display: flex;
-    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
     overflow: hidden;
 }
 
-/* 5. SIDEBAR: STATS */
-.sidebar-stats {
+/* THE LAYOUT ENGINE */
+.game-container {
+    display: flex; /* This puts Sidebars and Main content side-by-side */
+    height: 100vh;
+    width: 100vw;
+}
+
+.sidebar, .shop {
+    width: 300px;
+    background: var(--panel);
     padding: 20px;
-    animation: slide-in-left 0.8s ease-out;
+    border-right: 1px solid #2d2d2d;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-.stat-group {
-    margin-bottom: 25px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    padding-bottom: 10px;
-}
+.shop { border-right: none; border-left: 1px solid #2d2d2d; }
 
-.stat-label {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
-
-.stat-value {
-    font-size: 1.4rem;
-    color: var(--primary-gold);
-    text-shadow: 0 0 10px rgba(247, 147, 26, 0.3);
-}
-
-/* 6. CENTER AREA: THE MINING RIG */
-.main-game-area {
+.main-content {
+    flex: 1; /* This makes the center take up all remaining space */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
-    padding: 40px;
 }
 
-.balance-card {
-    text-align: center;
-    margin-bottom: 50px;
-}
-
-.main-btc-amount {
-    font-size: 4rem;
-    font-weight: 900;
-    margin: 0;
-    animation: glow-text 2s ease-in-out infinite alternate;
-}
-
-.satoshi-subtext {
-    color: var(--text-muted);
-    font-size: 1.2rem;
-    opacity: 0.7;
-}
-
-.hashrate-display {
-    color: var(--success-green);
-    font-size: 1.5rem;
-    margin-top: 10px;
-}
-
-/* 7. THE INTERACTIVE COIN */
-.bitcoin-clicker-container {
-    position: relative;
-    cursor: pointer;
-    transition: transform var(--anim-fast);
-}
-
-.bitcoin-clicker-container:active {
-    transform: scale(0.92);
-}
-
-.bitcoin-image {
-    width: 280px;
-    height: 280px;
-    border-radius: 50%;
-    animation: coin-pulse 4s infinite ease-in-out;
-    pointer-events: none;
-}
-
-/* Particle clicks */
-.click-particle {
-    position: absolute;
-    color: var(--success-green);
-    font-weight: bold;
-    pointer-events: none;
-    animation: float-particle 1s forwards linear;
-}
-
-/* 8. SHOP SYSTEM: UPGRADES */
-.shop-panel {
-    animation: slide-in-right 0.8s ease-out;
-}
-
-.shop-header {
-    padding: 25px;
-    background: rgba(0,0,0,0.2);
-    border-bottom: var(--border-glass);
-}
-
-.upgrade-list {
-    flex: 1;
-    overflow-y: auto;
+/* BOX STYLES */
+.stat-card {
+    background: rgba(255,255,255,0.03);
     padding: 15px;
-    scrollbar-width: thin;
-    scrollbar-color: var(--primary-gold) transparent;
-}
-
-.upgrade-item {
-    background: var(--surface-medium);
-    border: 1px solid rgba(255,255,255,0.05);
-    border-radius: var(--radius-md);
-    padding: 15px;
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-    transition: all var(--anim-fast);
-    position: relative;
-}
-
-.upgrade-item:hover {
-    background: rgba(255,255,255,0.12);
-    transform: translateX(-5px);
-    border-color: var(--primary-gold);
-}
-
-.upgrade-item.locked {
-    filter: grayscale(1) blur(1px);
-    opacity: 0.4;
-    cursor: not-allowed;
-}
-
-.upgrade-icon {
-    width: 50px;
-    height: 50px;
-    background: rgba(0,0,0,0.3);
     border-radius: 8px;
-    margin-right: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 
-.upgrade-info {
-    flex: 1;
+.label { font-size: 0.7rem; color: var(--text-dim); text-transform: uppercase; }
+.value { font-size: 1.2rem; color: var(--accent); margin-top: 5px; }
+
+/* THE COIN */
+.coin-img {
+    width: 250px;
+    cursor: pointer;
+    transition: transform 0.1s;
+    filter: drop-shadow(0 0 15px rgba(247, 147, 26, 0.2));
 }
 
-.upgrade-name {
-    display: block;
-    font-size: 1.1rem;
-    color: #fff;
-}
+.coin-img:active { transform: scale(0.95); }
 
-.upgrade-cost {
-    font-size: 0.85rem;
-    color: var(--primary-gold);
-}
-
-.upgrade-count {
-    font-size: 2rem;
-    opacity: 0.2;
-    font-weight: bold;
-    padding-left: 10px;
-}
-
-/* 9. SETTINGS & OVERLAYS */
+/* MODAL STYLES */
 .modal-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0,0,0,0.85);
-    z-index: 1000;
-    display: none; /* Toggle via JS */
-    place-items: center;
-    backdrop-filter: blur(10px);
+    background: rgba(0,0,0,0.8);
+    display: none; /* JS toggles this to 'flex' */
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
 }
 
-.modal-content {
-    background: #15171e;
-    width: 90%;
-    max-width: 500px;
-    padding: 40px;
-    border-radius: var(--radius-lg);
-    border: var(--border-glass);
+.modal-card {
+    background: var(--panel);
+    padding: 30px;
+    border-radius: 12px;
+    border: 1px solid #333;
     text-align: center;
+    min-width: 300px;
 }
 
-/* 10. UI BUTTONS */
-.btn-primary {
-    background: var(--primary-gold);
-    color: #000;
-    border: none;
-    padding: 12px 24px;
-    font-family: inherit;
-    font-weight: bold;
+/* SHOP ITEMS */
+.shop-card {
+    background: #222;
+    padding: 12px;
+    margin-bottom: 10px;
     border-radius: 6px;
     cursor: pointer;
-    transition: 0.3s;
-}
-
-.btn-primary:hover {
-    box-shadow: 0 0 20px var(--primary-glow);
-    transform: translateY(-2px);
-}
-
-.btn-danger {
-    background: transparent;
-    border: 1px solid var(--danger-red);
-    color: var(--danger-red);
-    padding: 8px 16px;
-    cursor: pointer;
-}
-
-.btn-danger:hover {
-    background: var(--danger-red);
-    color: white;
-}
-
-/* 11. SCROLLBAR CUSTOMIZATION */
-::-webkit-scrollbar {
-    width: 6px;
-}
-
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--surface-medium);
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--primary-gold);
-}
-
-/* 12. RESPONSIVE MEDIA QUERIES (Mobile Engine) */
-@media screen and (max-width: 1100px) {
-    .game-wrapper {
-        grid-template-columns: 1fr;
-        height: auto;
-        overflow-y: visible;
-    }
-
-    .sidebar-stats, .shop-panel {
-        height: 400px;
-    }
-
-    .main-btc-amount {
-        font-size: 2.5rem;
-    }
-}
-
-/* [Continued Lines 300-500: Utility Classes, Tooltips, and State Transitions] */
-
-.tooltip {
-    position: absolute;
-    background: black;
-    color: white;
-    padding: 5px 10px;
-    font-size: 0.7rem;
-    border-radius: 4px;
-    bottom: 110%;
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: nowrap;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s;
-}
-
-.upgrade-item:hover .tooltip {
-    opacity: 1;
-}
-
-/* Achievement Popups */
-.achievement-toast {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #00ff88;
-    color: black;
-    padding: 15px 30px;
-    border-radius: 50px;
-    box-shadow: 0 10px 30px rgba(0, 255, 136, 0.3);
-    transform: translateY(-100px);
-    transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.achievement-toast.show {
-    transform: translateY(0);
-}
-
-/* Footer & Legal */
-.footer-bar {
-    grid-column: 1 / -1;
     display: flex;
     justify-content: space-between;
-    padding: 10px 20px;
-    font-size: 0.7rem;
-    color: var(--text-muted);
+    align-items: center;
 }
 
-/* Light Theme Overrides */
-body.light-mode {
-    --bg-dark: #f0f2f5;
-    --text-main: #1a1c23;
-    --surface-light: rgba(0, 0, 0, 0.05);
-    --border-glass: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-/* Logic for "Game Paused" Screen */
-.pause-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,0.8);
-    display: grid;
-    place-items: center;
-    font-size: 2rem;
-    z-index: 10;
-}
-
-/* Final cleanup classes */
-.mt-10 { margin-top: 10px; }
-.mb-20 { margin-bottom: 20px; }
-.text-center { text-align: center; }
-.hidden { display: none !important; }
+.shop-card:hover { background: #2a2a2a; border-left: 3px solid var(--accent); }
