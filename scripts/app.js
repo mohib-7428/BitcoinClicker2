@@ -1,8 +1,4 @@
-/**
- * BITCOIN CLICKER 2: THE SEQUEL
- * Core Engine Optimized
- */
-
+/* 2026 Apr 25 */
 const Game = {
     // State
     bitcoins: 0,
