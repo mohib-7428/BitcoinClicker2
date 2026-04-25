@@ -1,217 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
+    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bitcoin Clicker 2.0</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
-    
-    <style>
-        :root {
-            --bg: #0a0b0d;
-            --surface: #16181d;
-            --accent: #f7931a; /* Bitcoin Orange */
-            --accent-glow: rgba(247, 147, 26, 0.2);
-            --text-main: #ffffff;
-            --text-dim: #a0a0a0;
-            --green: #00ff88;
-            --card-hover: #1e2128;
-        }
-
-        body {
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg);
-            color: var(--text-main);
-            font-family: 'Inter', sans-serif;
-            overflow: hidden; /* We'll use layout scrolls */
-        }
-
-        /* --- Layout Grid --- */
-        .game-container {
-            display: grid;
-            grid-template-columns: 300px 1fr 350px;
-            height: 100vh;
-        }
-
-        /* --- Sidebar (Stats) --- */
-        .sidebar {
-            background-color: var(--surface);
-            border-right: 1px solid #2d2d2d;
-            padding: 2rem;
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-
-        .stat-card {
-            background: rgba(255,255,255,0.03);
-            padding: 1rem;
-            border-radius: 8px;
-        }
-
-        .stat-card h5 { margin: 0; color: var(--text-dim); font-size: 0.8rem; text-transform: uppercase; }
-        .stat-card p { margin: 5px 0 0; font-family: 'JetBrains Mono', monospace; color: var(--accent); }
-
-        /* --- Main Clicker Area --- */
-        .main-area {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-            position: relative;
-        }
-
-        .balance-display { text-align: center; margin-bottom: 3rem; }
-        .balance-display h1 { font-size: 3rem; margin: 0; font-family: 'JetBrains Mono'; }
-        .balance-display .satoshi { color: var(--text-dim); font-size: 1.2rem; }
-        .balance-display .rate { color: var(--green); font-weight: bold; margin-top: 10px; }
-
-        .bitcoin-btn {
-            width: 250px;
-            cursor: pointer;
-            transition: transform 0.1s ease, filter 0.3s ease;
-            filter: drop-shadow(0 0 20px var(--accent-glow));
-        }
-
-        .bitcoin-btn:hover { transform: scale(1.05); filter: drop-shadow(0 0 30px var(--accent)); }
-        .bitcoin-btn:active { transform: scale(0.95); }
-
-        /* --- Shop (Right Side) --- */
-        .shop {
-            background-color: var(--surface);
-            border-left: 1px solid #2d2d2d;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .shop-header { padding: 1.5rem; border-bottom: 1px solid #2d2d2d; text-align: center; }
-        
-        .purchase-list {
-            overflow-y: auto;
-            padding: 1rem;
-            list-style: none;
-            margin: 0;
-        }
-
-        .purchase-item {
-            display: flex;
-            align-items: center;
-            padding: 1rem;
-            background: rgba(255,255,255,0.02);
-            border-radius: 12px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 1px solid transparent;
-        }
-
-        .purchase-item:hover { background: var(--card-hover); border-color: #444; }
-        .purchase-item.inactive { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
-
-        .item-info { flex-grow: 1; margin-left: 1rem; }
-        .item-name { font-weight: bold; display: block; }
-        .item-price { color: var(--accent); font-size: 0.85rem; font-family: 'JetBrains Mono'; }
-        .item-amount { font-size: 1.5rem; font-weight: 800; opacity: 0.3; }
-
-        /* --- Footer --- */
-        .footer {
-            position: absolute;
-            bottom: 20px;
-            left: 320px;
-            right: 370px;
-            display: flex;
-            justify-content: space-between;
-            color: var(--text-dim);
-            font-size: 0.8rem;
-        }
-
-        .reset-btn {
-            background: transparent;
-            border: 1px solid #444;
-            color: #ff4444;
-            padding: 5px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .reset-btn:hover { background: #ff4444; color: white; }
-
-        /* Mobile adjustments */
-        @media (max-width: 1000px) {
-            .game-container { grid-template-columns: 1fr; overflow-y: auto; height: auto; }
-            .sidebar, .shop { height: auto; border: none; }
-        }
-    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="dark-theme">
 
-    <div class="game-container">
-        <aside class="sidebar">
-            <h2 style="font-size: 1.2rem; border-bottom: 1px solid #333; padding-bottom: 10px;">Statistics</h2>
-            <div class="stat-card">
-                <h5>Highest Balance</h5>
-                <p id="highestGame">0 BTC</p>
+    <div class="app-wrapper">
+        <aside class="panel stats-panel">
+            <h2>Stats</h2>
+            <div class="stat-box">
+                <small>Total Clicks</small>
+                <div id="stat-clicks">0</div>
             </div>
-            <div class="stat-card">
-                <h5>Peak Hashrate</h5>
-                <p id="highestRate">0 BTC/s</p>
+            <div class="stat-box">
+                <small>Best Balance</small>
+                <div id="stat-highest">0 BTC</div>
             </div>
-            <div class="stat-card">
-                <h5>Total Clicks</h5>
-                <p id="mostClicks">0</p>
+            <div class="stat-box">
+                <small>Play Time</small>
+                <div id="stat-time">00:00:00</div>
             </div>
-            <div class="stat-card">
-                <h5>Time Played</h5>
-                <p id="timer">00:00:00</p>
-            </div>
+            <button class="settings-btn" onclick="toggleSettings()">⚙ Settings</button>
         </aside>
 
-        <main class="main-area">
-            <div class="balance-display">
-                <h1 id="btc-balance"><span class="bitcoinAmount">0.00000000</span> BTC</h1>
-                <div class="satoshi"><span class="satoshiAmount">0</span> Satoshi</div>
-                <div class="rate">+<span class="bSecRateNumber">0</span> BTC/sec</div>
+        <main class="mining-area">
+            <div class="header">
+                <h1 id="balance">0.00000000</h1>
+                <p>BITCOINS</p>
+                <div class="income-rate">Earnings: +<span id="rate">0</span> BTC/s</div>
             </div>
 
-            <div class="bitcoin">
-                <img src="images/bitcoin.png" class="bitcoin-btn" alt="Click to Mine">
+            <div class="clicker-container">
+                <img src="images/bitcoin.png" id="bitcoin-clicker" alt="Click!">
             </div>
-
-            <div class="footer">
-                <span class="version">v2.0 Sequel</span>
-                <button class="reset-btn resetButton">Hard Reset</button>
-            </div>
+            
+            <div class="auto-save-tag" id="save-status">Game Saved</div>
         </main>
 
-        <section class="shop">
-            <div class="shop-header">
-                <h2 style="font-size: 1.2rem; margin: 0;">Mining Store</h2>
-            </div>
-            <ul class="purchase-list purchaseList">
-                <li class="purchase-item purchaseItem inactive" id="item_oldCalculator" data-price="0.0000001" data-bits-per-sec="0.00000001">
-                    <div class="item-info">
-                        <span class="item-name">Old Calculator</span>
-                        <span class="item-price">0.0000001 BTC</span>
-                    </div>
-                    <div class="item-amount amountOfItem">0</div>
-                </li>
-                
-                <li class="purchase-item purchaseItem inactive" id="item_oldCpu" data-price="0.00000125" data-bits-per-sec="0.0000001">
-                    <div class="item-info">
-                        <span class="item-name">Old CPU</span>
-                        <span class="item-price">0.00000125 BTC</span>
-                    </div>
-                    <div class="item-amount amountOfItem">0</div>
-                </li>
-
-                </ul>
+        <section class="panel shop-panel">
+            <h2>Market</h2>
+            <div id="shop-items" class="items-list">
+                </div>
         </section>
     </div>
 
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <h3>Settings</h3>
+            <div class="setting-row">
+                <span>Theme</span>
+                <button onclick="toggleTheme()">Change Look</button>
+            </div>
+            <div class="setting-row">
+                <span>Manual Save</span>
+                <button onclick="manualSave()">Save Now</button>
+            </div>
+            <div class="setting-row">
+                <span>Danger Zone</span>
+                <button class="reset-btn" onclick="hardReset()">Delete Progress</button>
+            </div>
+            <button class="close-btn" onclick="toggleSettings()">Close</button>
+        </div>
+    </div>
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="scripts/app.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
