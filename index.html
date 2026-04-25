@@ -4,70 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bitcoin Clicker 2.0</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto+Mono&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="./style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="style.css">
 </head>
-<body class="dark-theme">
+<body>
 
-    <div class="app-wrapper">
-        <aside class="panel stats-panel">
-            <h2>Stats</h2>
-            <div class="stat-box">
-                <small>Total Clicks</small>
-                <div id="stat-clicks">0</div>
+    <div class="game-container">
+        <aside class="sidebar">
+            <h2 class="sidebar-title">Statistics</h2>
+            <div class="stat-card">
+                <span class="label">Total Clicks</span>
+                <div id="stat-clicks" class="value">0</div>
             </div>
-            <div class="stat-box">
-                <small>Best Balance</small>
-                <div id="stat-highest">0 BTC</div>
+            <div class="stat-card">
+                <span class="label">Best Balance</span>
+                <div id="stat-highest" class="value">0 BTC</div>
             </div>
-            <div class="stat-box">
-                <small>Play Time</small>
-                <div id="stat-time">00:00:00</div>
+            <div class="stat-card">
+                <span class="label">Play Time</span>
+                <div id="stat-time" class="value">00:00:00</div>
             </div>
-            <button class="settings-btn" onclick="toggleSettings()">⚙ Settings</button>
+            <button class="settings-trigger" onclick="toggleSettings()">⚙ Settings</button>
         </aside>
 
-        <main class="mining-area">
-            <div class="header">
+        <main class="main-content">
+            <div class="balance-container">
                 <h1 id="balance">0.00000000</h1>
-                <p>BITCOINS</p>
+                <p class="currency">BITCOINS</p>
                 <div class="income-rate">Earnings: +<span id="rate">0</span> BTC/s</div>
             </div>
 
-            <div class="clicker-container">
-                <img src="images/bitcoin.png" id="bitcoin-clicker" alt="Click!">
+            <div class="clicker-box">
+                <img src="images/bitcoin.png" id="bitcoin-clicker" class="coin-img">
             </div>
-            
-            <div class="auto-save-tag" id="save-status">Game Saved</div>
+
+            <div id="save-status" class="save-toast">Game Saved</div>
         </main>
 
-        <section class="panel shop-panel">
-            <h2>Market</h2>
-            <div id="shop-items" class="items-list">
+        <section class="shop">
+            <h2 class="sidebar-title">Market</h2>
+            <div id="shop-items" class="items-grid">
                 </div>
         </section>
     </div>
 
-    <div id="settings-modal" class="modal">
-        <div class="modal-content">
-            <h3>Settings</h3>
-            <div class="setting-row">
-                <span>Theme</span>
-                <button onclick="toggleTheme()">Change Look</button>
+    <div id="settings-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3>Game Settings</h3>
+            <div class="setting-item">
+                <span>Visual Theme</span>
+                <button onclick="toggleTheme()">Swap Colors</button>
             </div>
-            <div class="setting-row">
-                <span>Manual Save</span>
+            <div class="setting-item">
+                <span>Save Progress</span>
                 <button onclick="manualSave()">Save Now</button>
             </div>
-            <div class="setting-row">
-                <span>Danger Zone</span>
-                <button class="reset-btn" onclick="hardReset()">Delete Progress</button>
-            </div>
-            <button class="close-btn" onclick="toggleSettings()">Close</button>
+            <button class="btn-reset" onclick="hardReset()">Hard Reset</button>
+            <button class="btn-close" onclick="toggleSettings()">Close</button>
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="./app.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
